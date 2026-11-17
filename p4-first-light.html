@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>P4 First Light — Reev Cannon</title>
+<meta name="viewport" content="width=1920">
+<link rel="stylesheet" href="shared.css">
+<style>
+.alert-stage{height:160px;top:860px}
+.panel{top:0;height:160px;border-radius:12px;border:2px solid #16C47E;background:rgba(14,22,36,.80)}
+.country{position:absolute;left:0;top:0;width:8px;height:160px;border-radius:12px 0 0 12px;background:#16C47E}
+.dot{position:absolute;left:28px;top:71px;width:12px;height:12px;margin:0;animation:none}
+.panel.show .dot,.panel.hold .dot{animation:pulse 900ms ease-in-out infinite}
+.copy{position:absolute;left:56px;top:28px;right:28px}
+.name{font-size:40px;max-width:940px}
+.en{font-size:24px;margin-top:8px} .hi{font-size:24px;margin-top:2px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="alert-stage">
+    <div class="panel" id="panel">
+      <div class="country" id="bar"></div>
+      <span class="dot"></span>
+      <div class="copy">
+        <div class="name" id="name"></div>
+        <div class="en" id="en"></div>
+        <div class="hi" id="hi"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+const name = OV.ellipsis(OV.param("name","Priya"), 22);
+const country = (OV.param("country","india")||"").toLowerCase();
+const other = OV.param("country_name","worldwide");
+const colors = {india:"#FF9933", uk:"#2EE6FF", us:"#16C47E", canada:"#E11D2E", other:"#F5C542"};
+const copy = {
+  india:{en:`Namaste, ${name}! Welcome from India. Hindi or English, you're at home.`, hi:`नमस्ते, ${name}! भारत से स्वागत है। हिंदी या अंग्रेज़ी, आप अपने घर में हो।`},
+  uk:{en:`${name} checking in from the UK! What's up — glad you're here.`, hi:`${name} UK से जुड़ गए! स्वागत है, अच्छे हुए आए।`},
+  us:{en:`${name} from the US, welcome in. Glad you found the stream.`, hi:`${name} US से हैं, स्वागत है। अच्छा हुआ तुम स्ट्रीम पर आए।`},
+  canada:{en:`${name} from Canada, welcome in.`, hi:`${name} कनाडा से हैं, स्वागत है।`},
+  first:{en:`Welcome in, ${name}! First time here — say where you're from.`, hi:`स्वागत है, ${name}! पहली बार आए हो — बताओ कहाँ से हो।`},
+  other:{en:`${name} is in the chat from ${other}. Welcome to the marathon.`, hi:`${name} ${other} से चैट में हैं। मैराथन में स्वागत है।`}
+}[country] || {en:`Welcome in, ${name}!`, hi:`स्वागत है, ${name}!`};
+document.getElementById("name").textContent = name;
+document.getElementById("en").textContent = copy.en;
+document.getElementById("hi").textContent = copy.hi;
+document.getElementById("bar").style.background = colors[country] || colors.other;
+const panel=document.getElementById("panel");
+function show(){
+  panel.classList.remove("out","show","hold"); void panel.offsetWidth;
+  if (OV.isPreview()){ panel.classList.add("hold"); return; }
+  panel.classList.add("show"); OV.play("p4");
+  setTimeout(()=>panel.classList.add("out"), 4600);
+}
+show();
+if (OV.isDemo()) setInterval(show, 6500);
+</script>
+</body>
+</html>

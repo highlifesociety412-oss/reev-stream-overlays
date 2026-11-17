@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>P2 Emerald Crown — Reev Cannon</title>
+<meta name="viewport" content="width=1920">
+<link rel="stylesheet" href="shared.css">
+<style>
+.panel{top:0;height:240px;border-radius:20px;border:3px solid #16C47E;background:rgba(14,22,36,.92);
+  box-shadow:0 0 28px rgba(22,196,126,.55),var(--shadow)}
+.badge{position:absolute;left:16px;top:26px;width:168px;height:168px;border-radius:50%;
+  background:#16C47E;box-shadow:inset 0 0 0 2px #3DFFA8;display:flex;align-items:center;justify-content:center;
+  font-family:"Bebas Neue",sans-serif;font-size:80px;color:#070B12;line-height:1}
+.ring{position:absolute;left:16px;top:26px;width:168px;height:168px;border-radius:50%;border:2px solid #3DFFA8;opacity:0}
+.panel.show .ring,.panel.hold .ring{animation:ring 640ms 160ms ease-out 2}
+@keyframes ring{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.18);opacity:0}}
+.crown{position:absolute;left:28px;top:6px;width:144px;height:28px}
+.gem{position:absolute;bottom:0;width:8px;height:10px;background:#F5C542;border:1px solid #C4920A;
+  transform:rotate(45deg);opacity:0}
+.panel.show .gem{animation:drop 200ms ease-out forwards}
+.panel.hold .gem{opacity:1;transform:rotate(45deg) translateY(0)}
+@keyframes drop{from{opacity:0;transform:rotate(45deg) translateY(-12px)}to{opacity:1;transform:rotate(45deg) translateY(0)}}
+.copy{position:absolute;left:204px;top:20px;right:32px}
+.kicker{color:#3DFFA8;letter-spacing:4px;font-size:24px}
+.name{font-size:56px;max-width:780px;border-bottom:2px solid #16C47E;display:inline-block;padding-bottom:2px}
+.en{margin-top:10px;font-size:28px}
+.hi{margin-top:4px;font-size:26px}
+.amtline{font-family:"Poppins",sans-serif;font-weight:500;font-size:24px;color:#F5C542;margin-top:4px}
+.sweep{position:absolute;inset:-3px;border-radius:20px;pointer-events:none;overflow:hidden}
+.sweep i{position:absolute;top:0;bottom:0;width:6px;background:#16C47E;opacity:0}
+.panel.hold .sweep i,.panel.show .sweep i{animation:sweep 900ms 1000ms ease-in-out infinite;animation-delay:1000ms}
+@keyframes sweep{0%{left:0;opacity:0}20%{opacity:.8}100%{left:100%;opacity:0}}
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="alert-stage">
+    <div class="panel" id="panel">
+      <div class="crown" id="crown"></div>
+      <div class="badge" id="initial">L</div>
+      <div class="ring"></div>
+      <div class="sweep"><i></i></div>
+      <div class="copy">
+        <div class="kicker">FAMILY • परिवार</div>
+        <div class="name" id="name"></div>
+        <div class="en" id="en"></div>
+        <div class="hi" id="hi"></div>
+        <div class="amtline" id="amt" hidden></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+const lines = {
+  laowow: {name:"LAOWOW", initial:"L", en:"LAOWOW IN THE BUILDING! Thank you for the love, legend. Always family.", hi:"Laowow आ गए! प्यार के लिए दिल से शुक्रिया, लीजेंड। हमेशा परिवार।"},
+  luzminda: {name:"LUZMINDA", initial:"L", en:"LUZMINDA! Thank you for holding it down. This one is for you.", hi:"Luzminda! साथ निभाने के लिए धन्यवाद। यह आपके लिए है।"},
+  soriful: {name:"SORIFUL", initial:"S", en:"SORIFUL IN THE HOUSE! Thank you for the Stars and the support. Love you, family.", hi:"Soriful आ गए! Stars और सपोर्ट के लिए दिल से धन्यवाद। प्यार, परिवार।"}
+};
+const who = (OV.param("who","laowow")||"").toLowerCase();
+const custom = OV.param("name","");
+const data = lines[who] || {name:(custom||"FAMILY").toUpperCase(), initial:(custom||"F")[0].toUpperCase(),
+  en:`Welcome back, ${custom||"family"}. The family is on the map.`,
+  hi:`वापस स्वागत है, ${custom||"family"}। परिवार मैप पर है।`};
+document.getElementById("name").textContent = data.name;
+document.getElementById("initial").textContent = data.initial;
+document.getElementById("en").textContent = data.en;
+document.getElementById("hi").textContent = data.hi;
+const amount = OV.param("amount","");
+if (amount){
+  const a=document.getElementById("amt"); a.hidden=false;
+  a.innerHTML = `<span class="en">${amount} received.</span> <span class="hi">${amount} प्राप्त।</span>`;
+}
+const crown=document.getElementById("crown");
+for (let i=0;i<5;i++){
+  const g=document.createElement("div"); g.className="gem";
+  const t = (i-2)/2; // -1..1
+  g.style.left = (68 + t*52 - 4) + "px";
+  g.style.bottom = (Math.round((1-Math.abs(t))*10)) + "px";
+  g.style.animationDelay = (200 + i*140) + "ms";
+  crown.appendChild(g);
+}
+const panel=document.getElementById("panel");
+function show(){
+  panel.classList.remove("out","show","hold"); void panel.offsetWidth;
+  if (OV.isPreview()){ panel.classList.add("hold"); return; }
+  panel.classList.add("show"); OV.play("p2");
+  setTimeout(()=>panel.classList.add("out"), 7600);
+}
+show();
+if (OV.isDemo()) setInterval(show, 9500);
+</script>
+</body>
+</html>

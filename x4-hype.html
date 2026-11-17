@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>X4 Hype — Reev Cannon</title>
+<meta name="viewport" content="width=1920">
+<link rel="stylesheet" href="shared.css">
+<style>
+.letter{position:absolute;left:0;right:0;height:80px;background:rgba(7,11,18,.88);display:flex;align-items:center;justify-content:center;
+  transform:translateY(-100%);opacity:0;box-shadow:inset 0 -2px 0 #FF2E9A, 0 8px 24px rgba(0,0,0,.45)}
+.letter.bot{top:auto;bottom:0;transform:translateY(100%);box-shadow:inset 0 2px 0 #2EE6FF, 0 -8px 24px rgba(0,0,0,.45)}
+.letter.top{top:0}
+.stage.on .letter,.stage.hold .letter{transform:none;opacity:1;transition:transform 160ms ease-out,opacity 160ms ease-out}
+.stage.off .letter{opacity:0}
+.title{font-family:"Bebas Neue",sans-serif;font-size:64px;color:var(--cream);letter-spacing:2px;
+  -webkit-text-stroke:2px transparent;paint-order:stroke fill;
+  background:linear-gradient(90deg,#FF2E9A,#2EE6FF);-webkit-background-clip:text;background-clip:text}
+.title-stroke{font-family:"Bebas Neue",sans-serif;font-size:64px;letter-spacing:2px;color:var(--cream);
+  text-shadow:-2px 0 #FF2E9A, 2px 0 #2EE6FF, 0 -1px #2EE6FF, 0 1px #FF2E9A}
+.sub{font-family:"Bebas Neue",sans-serif;font-size:36px;letter-spacing:6px;color:var(--emerald)}
+.streaks{position:absolute;inset:0;pointer-events:none}
+.streak{position:absolute;height:4px;width:280px;border-radius:2px;
+  background:linear-gradient(90deg,#16C47E,#2EE6FF);opacity:0;filter:blur(.2px);
+  box-shadow:0 0 8px #2EE6FF}
+.stage.on .streak,.stage.hold .streak{animation:inward 300ms 80ms ease-out forwards}
+@keyframes inward{0%{opacity:1;transform:translate(0,0)}100%{opacity:0;transform:translate(var(--dx),var(--dy))}}
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+  <div class="letter top"><div class="title-stroke">HYPE • धमाका</div></div>
+  <div class="letter bot"><div class="sub">REEV CANNON LIVE</div></div>
+  <div class="streaks" id="streaks"></div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+const stage=document.getElementById("stage");
+const streaks=document.getElementById("streaks");
+function placeStreaks(){
+  streaks.innerHTML="";
+  for(let i=0;i<12;i++){
+    const s=document.createElement("div"); s.className="streak";
+    const fromLeft = i%2===0;
+    const y = 100 + (i*70)%880;
+    const x = fromLeft ? -20 : 1660;
+    s.style.left=x+"px"; s.style.top=y+"px";
+    // move inward but never across the middle 800x600 (x 560-1360, y 240-840)
+    const dx = fromLeft ? 400 : -400;
+    const dy = (i%3-1)*30;
+    s.style.setProperty("--dx", dx+"px");
+    s.style.setProperty("--dy", dy+"px");
+    s.style.width = (200+Math.random()*200)+"px";
+    streaks.appendChild(s);
+  }
+}
+function show(){
+  placeStreaks();
+  stage.classList.remove("on","off","hold"); void stage.offsetWidth;
+  if (OV.isPreview()){ stage.classList.add("hold"); return; }
+  stage.classList.add("on"); OV.play("hype");
+  setTimeout(()=>stage.classList.add("off"), 1400);
+}
+show();
+if (OV.isDemo()) setInterval(show, 4000);
+</script>
+</body>
+</html>

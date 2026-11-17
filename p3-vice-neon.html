@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>P3 Vice Neon — Reev Cannon</title>
+<meta name="viewport" content="width=1920">
+<link rel="stylesheet" href="shared.css">
+<style>
+.panel{border:2px solid #2EE6FF}
+.bar{position:absolute;left:0;top:0;width:8px;height:200px;border-radius:16px 0 0 16px;
+  background:linear-gradient(#2EE6FF,#FF2E9A);transform:scaleY(0);transform-origin:top}
+.panel.show .bar{animation:wipe 240ms ease-out forwards}
+.panel.hold .bar{transform:none;animation:none}
+@keyframes wipe{to{transform:scaleY(1)}}
+.icon{position:absolute;left:28px;top:64px;width:72px;height:72px;border-radius:16px;background:#2EE6FF;
+  display:flex;align-items:center;justify-content:center}
+.icon svg{width:40px;height:40px;fill:#070B12}
+.copy{position:absolute;left:124px;top:20px;right:32px}
+.kicker.member{color:#FF2E9A} .kicker.sub{color:#2EE6FF}
+.name{font-size:48px;max-width:860px}
+.en{margin-top:12px} .hi{margin-top:4px}
+.spark{position:absolute;left:0;width:8px;height:8px;border-radius:50%;background:#2EE6FF;opacity:0}
+.panel.show .spark,.panel.hold .spark{animation:sp 600ms ease-out forwards}
+@keyframes sp{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(var(--y))}}
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="alert-stage">
+    <div class="panel" id="panel">
+      <div class="bar"></div>
+      <div class="icon" aria-hidden="true">
+        <svg viewBox="0 0 40 40"><circle cx="20" cy="14" r="7"/><path d="M8 32c0-6 5.4-10 12-10s12 4 12 10"/><rect x="30" y="8" width="3" height="12" rx="1"/><rect x="25.5" y="13.5" width="12" height="3" rx="1"/></svg>
+      </div>
+      <div class="copy">
+        <div class="kicker" id="kicker">SUBSCRIBER</div>
+        <div class="name" id="name"></div>
+        <div class="en" id="en"></div>
+        <div class="hi" id="hi"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+const type = OV.param("type","sub");
+const name = OV.ellipsis(OV.param("name","Dee"), 22);
+const count = OV.param("count","5");
+const copy = {
+  sub:{k:"SUBSCRIBER", cls:"sub", en:`${name} just subscribed. Welcome to the crew.`, hi:`${name} ने सब्सक्राइब किया। क्रू में स्वागत है।`},
+  member:{k:"MEMBER", cls:"member", en:`${name} became a member! Welcome to the inner circle.`, hi:`${name} मेंबर बन गए! इनर सर्कल में स्वागत है।`},
+  gift:{k:"GIFTED MEMBERSHIPS", cls:"member", en:`${name} gifted ${count} memberships. That is real love.`, hi:`${name} ने ${count} मेंबरशिप गिफ्ट कीं। यह असली प्यार है।`}
+}[type] || {k:"ALERT", cls:"sub", en:`${name} is in.`, hi:`${name} जुड़ गए।`};
+const k=document.getElementById("kicker"); k.textContent=copy.k; k.className="kicker "+copy.cls;
+document.getElementById("name").textContent=name;
+document.getElementById("en").textContent=copy.en;
+document.getElementById("hi").textContent=copy.hi;
+const panel=document.getElementById("panel");
+function show(){
+  panel.classList.remove("out","show","hold"); void panel.offsetWidth;
+  if (OV.isPreview()){ panel.classList.add("hold"); return; }
+  panel.classList.add("show"); OV.play("p3");
+  setTimeout(()=>panel.classList.add("out"), 5600);
+}
+show();
+if (OV.isDemo()) setInterval(show, 7500);
+</script>
+</body>
+</html>
