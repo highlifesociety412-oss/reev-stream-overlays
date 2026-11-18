@@ -2,31 +2,106 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>BRB — Reev Cannon</title>
-<meta name="viewport" content="width=1920">
-<link rel="stylesheet" href="shared.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>REEV CANNON LIVE - Be Right Back</title>
 <style>
-.live-line{font-family:"Bebas Neue",sans-serif;font-size:36px;letter-spacing:8px;color:var(--gold);margin-top:8px}
+@font-face{font-family:"Bebas Neue";src:url("fonts/BebasNeue-Regular.ttf") format("truetype");font-weight:400;font-display:block}
+@font-face{font-family:"Poppins";src:url("fonts/Poppins-Medium.ttf") format("truetype");font-weight:500;font-display:block}
+@font-face{font-family:"Poppins";src:url("fonts/Poppins-SemiBold.ttf") format("truetype");font-weight:600;font-display:block}
+@font-face{font-family:"Noto Sans Devanagari";src:url("fonts/NotoSansDevanagari-Variable.ttf") format("truetype");font-weight:100 900;font-display:block}
+:root{--night:#070B12;--panel:#0E1624;--emerald:#16C47E;--glow:#3DFFA8;--gold:#F5C542;--gold-deep:#C4920A;
+  --magenta:#FF2E9A;--orange:#FF7A3D;--purple:#8B3DFF;--cyan:#2EE6FF;--cream:#F6F1E8;--muted:#B7C0CC;--danger:#E11D2E;--saffron:#FF9933}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:transparent;font-synthesis:none;-webkit-font-smoothing:antialiased}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;overflow:hidden;
+  transform-origin:50% 50%;transform:translate(-50%,-50%) scale(var(--s,1))}
+.hi,.dev{font-family:"Noto Sans Devanagari","Poppins",sans-serif}
+body.lang-en .hi,body.lang-hi .en{display:none}
+body.hold *,body.hold *::before,body.hold *::after{animation:none!important;transition:none!important}
+.abs{position:absolute}
+
+.bg{position:absolute;inset:0;background:#070B12 url("v2-brb-bg.jpg") center/1920px 1080px no-repeat}
+.frame{position:absolute;border-radius:18px;pointer-events:none}
+.mainf{left:20px;top:20px;width:1440px;height:1040px;border:3px solid var(--emerald);
+  box-shadow:0 0 22px rgba(255,46,154,.55),inset 0 0 40px rgba(22,196,126,.15);animation:fpulse 3.2s ease-in-out infinite}
+.mainf::before{content:"";position:absolute;inset:8px;border:1px solid rgba(245,197,66,.4);border-radius:12px}
+@keyframes fpulse{0%,100%{box-shadow:0 0 14px rgba(255,46,154,.35),inset 0 0 40px rgba(22,196,126,.12)}50%{box-shadow:0 0 34px rgba(255,46,154,.8),inset 0 0 50px rgba(22,196,126,.22)}}
+.title{position:absolute;left:66px;top:96px;width:660px}
+.title img{display:block;width:100%;height:auto}
+.title .glow{position:absolute;inset:0;filter:blur(18px) saturate(1.4);opacity:.0;animation:tglow 3.2s ease-in-out infinite}
+@keyframes tglow{0%,100%{opacity:.15}50%{opacity:.75}}
+.copy{position:absolute;left:96px;top:360px;width:760px}
+.kick{font-family:"Bebas Neue",sans-serif;font-size:44px;letter-spacing:6px;color:var(--gold);line-height:1;
+  text-shadow:0 0 14px rgba(245,197,66,.55),0 3px 0 #160626}
+.main{display:flex;align-items:center;margin-top:14px;font-family:"Bebas Neue",sans-serif;font-size:104px;letter-spacing:4px;line-height:1;white-space:nowrap;color:var(--cream);
+  text-shadow:0 0 2px #160626,3px 3px 0 #160626,-3px -3px 0 #160626,3px -3px 0 #160626,-3px 3px 0 #160626,0 0 28px rgba(255,46,154,.65)}
+.dotlive{flex:none;width:30px;height:30px;border-radius:50%;background:var(--emerald);margin-right:26px;box-shadow:0 0 18px var(--emerald);animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.45;transform:scale(.85)}50%{opacity:1;transform:scale(1.15)}}
+.dots i{display:inline-block;font-style:normal;animation:dot 1.5s infinite;opacity:.15}
+.dots i:nth-child(2){animation-delay:.25s}.dots i:nth-child(3){animation-delay:.5s}
+@keyframes dot{0%,100%{opacity:.15}40%{opacity:1}}
+.hindi{margin:14px 0 0 58px;font-weight:700;font-size:64px;line-height:1.35;color:var(--glow);
+  text-shadow:0 3px 0 #160626,0 0 20px rgba(61,255,168,.55)}
+.sub{margin:16px 0 0 60px;font-family:"Poppins",sans-serif;font-weight:500;font-size:32px;color:var(--muted);text-shadow:0 2px 6px #000}
+.sub.hi{margin-top:4px;font-family:"Noto Sans Devanagari",sans-serif;font-weight:600;font-size:28px}
+/* chat panel - same geometry as gaming.html */
+.chat{position:absolute;left:1480px;top:20px;width:420px;height:1040px;border-radius:18px;background:rgba(7,11,18,.66);
+  border:2px solid rgba(22,196,126,.85);box-shadow:0 0 18px rgba(139,61,255,.45)}
+.chat .hd{height:64px;display:flex;align-items:center;padding:0 22px;border-bottom:1px solid rgba(245,197,66,.35);
+  background:linear-gradient(90deg,rgba(255,46,154,.22),rgba(139,61,255,.12) 60%,transparent);border-radius:16px 16px 0 0}
+.chat .hd b{width:14px;height:14px;border-radius:50%;background:var(--emerald);box-shadow:0 0 10px var(--emerald);margin-right:14px;animation:pulse 1.6s infinite}
+.chat .hd span{font-family:"Bebas Neue",sans-serif;font-size:36px;letter-spacing:3px;color:var(--gold)}
+.chat .hd em{margin-left:12px;font-style:normal;font-size:22px;font-weight:600;color:var(--muted)}
+/* camera box: transparent interior so CameraFi's camera layer shows through */
+.cam{position:absolute;width:400px;height:225px;border-radius:12px;border:3px solid var(--emerald);
+  box-shadow:0 0 16px rgba(255,46,154,.7),inset 0 0 0 1px rgba(245,197,66,.5)}
+.cam .tag{position:absolute;left:50%;top:-18px;transform:translateX(-50%);background:#0E1624;border:1px solid var(--gold);border-radius:6px;
+  padding:3px 14px 1px;font-family:"Bebas Neue",sans-serif;font-size:24px;letter-spacing:3px;color:var(--cream);white-space:nowrap}
+
+.bar{position:absolute;left:156px;top:812px;width:560px;height:10px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden}
+.bar i{position:absolute;top:0;bottom:0;width:40%;border-radius:6px;background:linear-gradient(90deg,transparent,var(--magenta),var(--gold),transparent);animation:slide 2.4s ease-in-out infinite}
+@keyframes slide{0%{left:-40%}100%{left:100%}}
 </style>
 </head>
 <body>
-
-<div class="scene">
-  <div class="scene-frame"></div>
-  <div class="scene-inner">
-    <div class="brand">REEV CANNON</div>
-    <div class="live-line">LIVE • लाइव</div>
-    <div class="scene-title en" id="titleEn"><span class="dot"></span>BE RIGHT BACK</div>
-    <div class="scene-hi hi" id="titleHi">अभी आते हैं</div>
-    <div class="scene-sub en">Stretch, water, don’t go anywhere. I’ll be back on the road in a minute.</div>
-    <div class="scene-sub-hi hi">थोड़ा स्ट्रेच कर लो, पानी पी लो, कहीं मत जाओ। एक मिनट में वापस सड़क पर हूँ।</div>
-  </div>
+<div id="stage">
+<div class="bg" id="bg"></div>
+<div class="frame mainf"></div>
+<div class="title"><img class="glow" src="v2-title.png" alt=""><img src="v2-title.png" alt="REEV CANNON" style="position:relative"></div>
+<div class="copy">
+  <div class="kick">REEV CANNON LIVE</div>
+  <div class="main"><span class="dotlive"></span><span class="en-main">BE RIGHT BACK</span></div>
+  <div class="hindi hi">अभी वापस आते हैं</div>
+  <div class="sub en">Stretch, water, don’t go anywhere.</div>
+  <div class="sub hi">कहीं मत जाना, बस अभी आते हैं।</div>
 </div>
-
-<script src="shared.js"></script>
+<div class="chat" id="chat"><div class="hd"><b></b><span>LIVE CHAT</span><em class="hi">लाइव चैट</em></div></div>
+<div class="bar"><i></i></div>
+</div>
 <script>
-/* Static scene; lang=en|hi|both handled in shared.js */
-document.body.classList.add("preview-safe");
+/* Reev Cannon overlay v2 - scales a 1920x1080 stage to any viewport (CameraFi 720p, OBS 1080p). */
+var Q=new URLSearchParams(location.search);
+function P(n,d){var v=Q.get(n);return (v===null||v==="")?d:v;}
+function on(n,d){var v=P(n,d);return v==="1"||v==="true"||v==="yes"||v==="on";}
+(function(){var st=document.getElementById("stage");
+  function fit(){st.style.setProperty("--s",Math.min(innerWidth/1920,innerHeight/1080));}
+  fit();addEventListener("resize",fit);
+  var l=(P("lang","both")+"").toLowerCase(); if(l==="en"||l==="hi")document.body.classList.add("lang-"+l);
+  if(on("hold","0"))document.body.classList.add("hold");
+})();
+
+var CAMON="0";
+(function(){
+  if(!on("chat","1")) document.getElementById("chat").style.display="none";
+  var cam=document.getElementById("cam"), bg=document.getElementById("bg");
+  if(!cam) return;
+  if(!on("cam",CAMON)){cam.style.display="none";return;}
+  // cut a see-through hole in the background behind the camera box
+  var x=cam.offsetLeft+3,y=cam.offsetTop+3,w=cam.offsetWidth-6,h=cam.offsetHeight-6;
+  bg.style.clipPath=bg.style.webkitClipPath="polygon(evenodd,0 0,1920px 0,1920px 1080px,0 1080px,0 0,"+x+"px "+y+"px,"+x+"px "+(y+h)+"px,"+(x+w)+"px "+(y+h)+"px,"+(x+w)+"px "+y+"px,"+x+"px "+y+"px)";
+})();
+
 </script>
 </body>
 </html>

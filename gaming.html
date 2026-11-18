@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>REEV CANNON LIVE - Gaming Layout</title>
+<style>
+@font-face{font-family:"Bebas Neue";src:url("fonts/BebasNeue-Regular.ttf") format("truetype");font-weight:400;font-display:block}
+@font-face{font-family:"Poppins";src:url("fonts/Poppins-Medium.ttf") format("truetype");font-weight:500;font-display:block}
+@font-face{font-family:"Poppins";src:url("fonts/Poppins-SemiBold.ttf") format("truetype");font-weight:600;font-display:block}
+@font-face{font-family:"Noto Sans Devanagari";src:url("fonts/NotoSansDevanagari-Variable.ttf") format("truetype");font-weight:100 900;font-display:block}
+:root{--night:#070B12;--panel:#0E1624;--emerald:#16C47E;--glow:#3DFFA8;--gold:#F5C542;--gold-deep:#C4920A;
+  --magenta:#FF2E9A;--orange:#FF7A3D;--purple:#8B3DFF;--cyan:#2EE6FF;--cream:#F6F1E8;--muted:#B7C0CC;--danger:#E11D2E;--saffron:#FF9933}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:transparent;font-synthesis:none;-webkit-font-smoothing:antialiased}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;overflow:hidden;
+  transform-origin:50% 50%;transform:translate(-50%,-50%) scale(var(--s,1))}
+.hi,.dev{font-family:"Noto Sans Devanagari","Poppins",sans-serif}
+body.lang-en .hi,body.lang-hi .en{display:none}
+body.hold *,body.hold *::before,body.hold *::after{animation:none!important;transition:none!important}
+.abs{position:absolute}
+
+svg{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:visible}
+.glowl{animation:g 3.2s ease-in-out infinite}
+@keyframes g{0%,100%{opacity:.35}50%{opacity:.95}}
+.mark{position:absolute;left:34px;top:30px;width:300px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.6))}
+.chat{position:absolute;border-radius:18px;background:rgba(7,11,18,.65)}
+.chat .hd{height:64px;display:flex;align-items:center;padding:0 22px;border-bottom:1px solid rgba(245,197,66,.35);
+  background:linear-gradient(90deg,rgba(255,46,154,.25),rgba(139,61,255,.12) 60%,transparent);border-radius:18px 18px 0 0}
+.chat .hd b{width:14px;height:14px;border-radius:50%;background:var(--emerald);box-shadow:0 0 10px var(--emerald);margin-right:14px;animation:pulse 1.6s infinite}
+.chat .hd span{font-family:"Bebas Neue",sans-serif;font-size:36px;letter-spacing:3px;color:var(--gold)}
+.chat .hd em{margin-left:12px;font-style:normal;font-size:22px;font-weight:600;color:var(--muted)}
+@keyframes pulse{0%,100%{opacity:.45}50%{opacity:1}}
+.tag{position:absolute;transform:translate(-50%,0);background:#0E1624;border:1px solid var(--gold);border-radius:6px;
+  padding:3px 14px 1px;font-family:"Bebas Neue",sans-serif;font-size:24px;letter-spacing:3px;color:var(--cream);white-space:nowrap}
+
+</style>
+</head>
+<body>
+<div id="stage">
+<div class="chat" id="chat"><div class="hd"><b></b><span>LIVE CHAT</span><em class="hi">लाइव चैट</em></div></div>
+<svg id="svg" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg"></svg>
+<img class="mark" src="v2-mark.png" alt="REEV CANNON">
+<div class="tag" id="camtag">REEV CANNON</div>
+</div>
+<script>
+/* Reev Cannon overlay v2 - scales a 1920x1080 stage to any viewport (CameraFi 720p, OBS 1080p). */
+var Q=new URLSearchParams(location.search);
+function P(n,d){var v=Q.get(n);return (v===null||v==="")?d:v;}
+function on(n,d){var v=P(n,d);return v==="1"||v==="true"||v==="yes"||v==="on";}
+(function(){var st=document.getElementById("stage");
+  function fit(){st.style.setProperty("--s",Math.min(innerWidth/1920,innerHeight/1080));}
+  fit();addEventListener("resize",fit);
+  var l=(P("lang","both")+"").toLowerCase(); if(l==="en"||l==="hi")document.body.classList.add("lang-"+l);
+  if(on("hold","0"))document.body.classList.add("hold");
+})();
+
+(function(){
+  var chat=on("chat","1"), cam=on("cam","1");
+  var G=chat?[20,20,1440,1040]:[20,20,1880,1040];           // game frame x,y,w,h
+  var C=[G[0]+G[2]-28-400, G[1]+G[3]-28-225, 400, 225];        // camera box (1032,807)-(1432,1032) with chat on
+  var H=[1480,20,420,1040];                                    // chat panel
+  var ch=document.getElementById("chat");
+  if(chat){ch.style.left=H[0]+"px";ch.style.top=H[1]+"px";ch.style.width=H[2]+"px";ch.style.height=H[3]+"px";} else ch.style.display="none";
+  function rect(r,rx,stroke,w,extra){return '<rect x="'+(r[0]+w/2)+'" y="'+(r[1]+w/2)+'" width="'+(r[2]-w)+'" height="'+(r[3]-w)+'" rx="'+rx+'" fill="none" stroke="'+stroke+'" stroke-width="'+w+'" '+(extra||"")+'/>';}
+  var s='<defs><linearGradient id="ng" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFD65C"/><stop offset=".35" stop-color="#FF7A46"/><stop offset=".65" stop-color="#FF2E9A"/><stop offset="1" stop-color="#8B3DFF"/></linearGradient>'+
+        '<linearGradient id="eg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3DFFA8"/><stop offset="1" stop-color="#16C47E"/></linearGradient>'+
+        '<filter id="bl" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="7"/></filter></defs>';
+  var boxes=[[G,18,"url(#ng)"]]; if(cam) boxes.push([C,12,"url(#eg)"]); if(chat) boxes.push([H,18,"url(#eg)"]);
+  s+='<g class="glowl" filter="url(#bl)">'; boxes.forEach(function(b){s+=rect(b[0],b[1],b[0]===G?"#FF2E9A":"#FF2E9A",8);}); s+='</g>';
+  boxes.forEach(function(b){s+=rect(b[0],b[1],b[2],3);});
+  s+=rect([G[0]+9,G[1]+9,G[2]-18,G[3]-18],12,"rgba(245,197,66,.35)",1);
+  document.getElementById("svg").innerHTML=s;
+  var t=document.getElementById("camtag");
+  if(cam){t.style.left=(C[0]+C[2]/2)+"px";t.style.top=(C[1]-18)+"px";} else t.style.display="none";
+})();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>REEV CANNON LIVE - Heat & Hype</title>
+<style>
+@font-face{font-family:"Bebas Neue";src:url("fonts/BebasNeue-Regular.ttf") format("truetype");font-weight:400;font-display:block}
+@font-face{font-family:"Poppins";src:url("fonts/Poppins-Medium.ttf") format("truetype");font-weight:500;font-display:block}
+@font-face{font-family:"Poppins";src:url("fonts/Poppins-SemiBold.ttf") format("truetype");font-weight:600;font-display:block}
+@font-face{font-family:"Noto Sans Devanagari";src:url("fonts/NotoSansDevanagari-Variable.ttf") format("truetype");font-weight:100 900;font-display:block}
+:root{--night:#070B12;--panel:#0E1624;--emerald:#16C47E;--glow:#3DFFA8;--gold:#F5C542;--gold-deep:#C4920A;
+  --magenta:#FF2E9A;--orange:#FF7A3D;--purple:#8B3DFF;--cyan:#2EE6FF;--cream:#F6F1E8;--muted:#B7C0CC;--danger:#E11D2E;--saffron:#FF9933}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:transparent;font-synthesis:none;-webkit-font-smoothing:antialiased}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;overflow:hidden;
+  transform-origin:50% 50%;transform:translate(-50%,-50%) scale(var(--s,1))}
+.hi,.dev{font-family:"Noto Sans Devanagari","Poppins",sans-serif}
+body.lang-en .hi,body.lang-hi .en{display:none}
+body.hold *,body.hold *::before,body.hold *::after{animation:none!important;transition:none!important}
+.abs{position:absolute}
+
+.heat{position:absolute;left:40px;top:150px;padding:10px 14px 12px;border-radius:12px;background:rgba(7,11,18,.62);border:1px solid rgba(225,29,46,.55);
+  box-shadow:0 0 12px rgba(225,29,46,.25);transition:opacity .4s}
+.heat.idle{opacity:.78}
+.heat .lab{font-family:"Bebas Neue",sans-serif;font-size:24px;letter-spacing:3px;color:var(--cream);line-height:1;margin-bottom:8px;white-space:nowrap}
+.heat .lab .dev{font-weight:700;font-size:19px;letter-spacing:0;margin:0 4px}
+.heat .lab b{font-weight:400;color:var(--gold);margin-left:6px}
+.heat .lab.flash{color:var(--danger)}
+.bars{display:flex;gap:7px;align-items:flex-end}
+.bars i{display:block;width:28px;border-radius:5px;background:rgba(14,22,36,.95);border:1px solid rgba(183,192,204,.4)}
+.bars i:nth-child(1){height:22px}.bars i:nth-child(2){height:28px}.bars i:nth-child(3){height:34px}.bars i:nth-child(4){height:40px}.bars i:nth-child(5){height:46px}
+.bars i.on{background:linear-gradient(180deg,#E11D2E 0%,#FF7A3D 55%,#F5C542 100%);border-color:#E11D2E;box-shadow:0 0 10px #E11D2E}
+.bars i.lit{animation:pop 300ms ease-out}
+@keyframes pop{0%{transform:scale(.5)}70%{transform:scale(1.18)}100%{transform:none}}
+.heat.max{animation:hot 700ms ease-in-out infinite;border-color:#E11D2E}
+@keyframes hot{0%,100%{box-shadow:0 0 10px rgba(225,29,46,.4)}50%{box-shadow:0 0 30px rgba(225,29,46,.95)}}
+.heat5{position:absolute;left:48px;top:830px;width:940px;height:136px;border-radius:16px;background:rgba(14,22,36,.9);border:2px solid #E11D2E;
+  box-shadow:0 0 24px rgba(225,29,46,.55);display:flex;flex-direction:column;justify-content:center;padding:0 36px;opacity:0;transform:translateY(30px);transition:opacity .25s,transform .25s}
+.heat5.show{opacity:1;transform:none}
+.heat5 .en{font-family:"Bebas Neue",sans-serif;font-size:56px;letter-spacing:2px;color:var(--cream);line-height:1}
+.heat5 .hi{margin-top:8px;font-weight:600;font-size:28px;color:var(--muted)}
+/* HYPE sting: letterbox bars + neon streaks, middle of the screen stays clear */
+.letter{position:absolute;left:0;right:0;height:96px;background:rgba(7,11,18,.9);display:flex;align-items:center;justify-content:center;opacity:0}
+.letter.top{top:0;transform:translateY(-100%);box-shadow:inset 0 -3px 0 #FF2E9A,0 8px 24px rgba(0,0,0,.45)}
+.letter.bot{bottom:0;transform:translateY(100%);box-shadow:inset 0 3px 0 #2EE6FF,0 -8px 24px rgba(0,0,0,.45)}
+#hype.on .letter{transform:none;opacity:1;transition:transform 170ms ease-out,opacity 170ms ease-out}
+#hype.off .letter{opacity:0;transition:opacity 380ms ease-in}
+.htitle{font-family:"Bebas Neue",sans-serif;font-size:76px;letter-spacing:6px;color:var(--cream);line-height:1;
+  text-shadow:-3px 0 #FF2E9A,3px 0 #2EE6FF,0 0 24px rgba(255,46,154,.8)}
+.htitle .dev{font-weight:800;font-size:56px;letter-spacing:0}
+.hsub{font-family:"Bebas Neue",sans-serif;font-size:42px;letter-spacing:8px;color:var(--emerald);text-shadow:0 0 14px rgba(22,196,126,.7)}
+.streak{position:absolute;height:5px;border-radius:3px;background:linear-gradient(90deg,#FF2E9A,#F5C542,#2EE6FF);opacity:0;box-shadow:0 0 10px #FF2E9A}
+#hype.on .streak{animation:inward 380ms 80ms ease-out forwards}
+@keyframes inward{0%{opacity:1;transform:translate(0,0)}100%{opacity:0;transform:translate(var(--dx),var(--dy))}}
+#hype .flashv{position:absolute;inset:0;box-shadow:inset 0 0 140px rgba(255,46,154,.0);opacity:0}
+#hype.on .flashv{animation:vig 700ms ease-out}
+@keyframes vig{0%{opacity:1;box-shadow:inset 0 0 160px rgba(255,46,154,.7)}100%{opacity:0;box-shadow:inset 0 0 160px rgba(255,46,154,0)}}
+body.hold #hype .letter{transform:none;opacity:1}
+body.hold #hype .streak{opacity:.9}
+
+</style>
+</head>
+<body>
+<div id="stage">
+<div class="heat idle" id="heat"><div class="lab" id="lab">HEAT <span class="dev">हीट</span><b id="lv">0/5</b></div><div class="bars" id="bars"><i></i><i></i><i></i><i></i><i></i></div></div>
+<div class="heat5" id="heat5"><div class="en">HEAT 5 — ALL HANDS, STAY IN THE CAR.</div><div class="hi">हीट 5 — सब तैयार, कार में रहो।</div></div>
+<div id="hype"><div class="flashv"></div><div class="letter top"><div class="htitle">HYPE • <span class="dev">धमाका</span></div></div>
+<div class="letter bot"><div class="hsub">REEV CANNON LIVE</div></div><div id="streaks"></div></div>
+</div>
+<script>
+/* Reev Cannon overlay v2 - scales a 1920x1080 stage to any viewport (CameraFi 720p, OBS 1080p). */
+var Q=new URLSearchParams(location.search);
+function P(n,d){var v=Q.get(n);return (v===null||v==="")?d:v;}
+function on(n,d){var v=P(n,d);return v==="1"||v==="true"||v==="yes"||v==="on";}
+(function(){var st=document.getElementById("stage");
+  function fit(){st.style.setProperty("--s",Math.min(innerWidth/1920,innerHeight/1080));}
+  fit();addEventListener("resize",fit);
+  var l=(P("lang","both")+"").toLowerCase(); if(l==="en"||l==="hi")document.body.classList.add("lang-"+l);
+  if(on("hold","0"))document.body.classList.add("hold");
+})();
+
+var SOUND=on("sound","1")&&!on("hold","0"), AC=null;
+function tone(c,f,t,s,d,g){var o=c.createOscillator(),G=c.createGain();o.type=t;o.frequency.setValueAtTime(f,s);G.gain.setValueAtTime(1e-4,s);
+  G.gain.exponentialRampToValueAtTime(g,s+.02);G.gain.exponentialRampToValueAtTime(1e-4,s+d);o.connect(G);G.connect(c.destination);o.start(s);o.stop(s+d+.02);}
+function noise(c,s,d,g,hp){var b=c.createBuffer(1,Math.floor(c.sampleRate*d),c.sampleRate),a=b.getChannelData(0);for(var i=0;i<a.length;i++)a[i]=(Math.random()*2-1)*(1-i/a.length);
+  var n=c.createBufferSource();n.buffer=b;var h=c.createBiquadFilter();h.type="highpass";h.frequency.value=hp;var G=c.createGain();G.gain.setValueAtTime(g,s);
+  G.gain.exponentialRampToValueAtTime(1e-4,s+d);n.connect(h);h.connect(G);G.connect(c.destination);n.start(s);n.stop(s+d);}
+function play(k){if(!SOUND)return;try{var C=window.AudioContext||window.webkitAudioContext;if(!C)return;AC=AC||new C();if(AC.state==="suspended")AC.resume();
+  var c=AC,t=c.currentTime,m=.32;
+  if(k==="p1"){tone(c,1046.5,"sine",t,.08,.22*m);tone(c,261.63,"sine",t+.06,.7,.16*m);tone(c,329.63,"triangle",t+.06,.7,.12*m);noise(c,t+.12,.2,.08*m,200);}
+  else if(k==="p2"){tone(c,261.63,"sine",t,.9,.14*m);tone(c,392,"sine",t,.9,.12*m);tone(c,659.25,"triangle",t+.04,.14,.2*m);tone(c,783.99,"triangle",t+.18,.14,.18*m);noise(c,t+.4,.3,.06*m,4000);}
+  else if(k==="p3"){tone(c,880,"square",t,.09,.08*m);tone(c,220,"sine",t+.02,.12,.1*m);}
+  else if(k==="p4"){tone(c,800,"sine",t,.06,.08*m);}
+  else if(k==="heat-up"){tone(c,120,"sine",t,.08,.16*m);noise(c,t,.08,.1*m,80);}
+  else if(k==="heat-5"){for(var i=0;i<4;i++){tone(c,440,"sine",t+i*.16,.08,.1*m);tone(c,520,"sine",t+.08+i*.16,.08,.1*m);}}
+  else if(k==="hype"){tone(c,60,"sine",t,.25,.28*m);noise(c,t,.35,.16*m,200);}
+}catch(e){}}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function ell(s,n){s=String(s||"");return s.length>n?s.slice(0,n-1)+"…":s;}
+
+/* ---------- REEV CANNON extras v2: HEAT meter + HYPE sting ----------
+ Default: small HEAT meter at 0/5 under the logo (top-left), nothing else.
+   extras.html?demo=1        loop: heat climbs 0→5, HYPE sting fires each cycle
+   extras.html?level=3       start at heat 3          extras.html?heat=0   hide the meter
+   extras.html#level=4  or  #heat=4  or  #hype       change live without reloading
+   window.setHeat(3) / window.hype()  or  postMessage({level:3}) / postMessage({hype:true})
+ Options: &sound=0, &hold=1 (freeze the hype sting on screen, for previews)
+*/
+var bars=[].slice.call(document.querySelectorAll("#bars i")), heatEl=document.getElementById("heat"), lab=document.getElementById("lab"),
+    lv=document.getElementById("lv"), h5=document.getElementById("heat5"), hypeEl=document.getElementById("hype"), streaks=document.getElementById("streaks");
+var HOLD=on("hold","0"), level=0;
+if(!on("heat","1")) heatEl.style.display="none";
+function setHeat(n){
+  var prev=level; level=Math.max(0,Math.min(5,parseInt(n,10)||0));
+  bars.forEach(function(b,i){var o=i<level,w=b.classList.contains("on");b.classList.toggle("on",o);
+    if(o&&!w&&!HOLD){b.classList.remove("lit");void b.offsetWidth;b.classList.add("lit");}});
+  lv.textContent=level+"/5"; heatEl.classList.toggle("idle",level===0); heatEl.classList.toggle("max",level===5);
+  h5.classList.toggle("show",level===5);
+  if(level>prev){ if(level===5)play("heat-5"); else play("heat-up"); lab.classList.add("flash"); setTimeout(function(){lab.classList.remove("flash");},220); }
+  if(level===5&&!HOLD){clearTimeout(setHeat._t);setHeat._t=setTimeout(function(){h5.classList.remove("show");},5000);}
+}
+window.setHeat=setHeat;
+function placeStreaks(){
+  streaks.innerHTML="";
+  for(var i=0;i<14;i++){var s=document.createElement("div");s.className="streak";var L=i%2===0,y=130+(i*67)%820;
+    s.style.left=(L?-30:1600)+"px";s.style.top=y+"px";s.style.width=(220+Math.random()*200)+"px";
+    s.style.setProperty("--dx",(L?420:-420)+"px");s.style.setProperty("--dy",((i%3-1)*30)+"px");streaks.appendChild(s);}
+}
+function hype(){
+  placeStreaks(); hypeEl.classList.remove("on","off"); void hypeEl.offsetWidth; hypeEl.classList.add("on");
+  if(HOLD)return; play("hype"); clearTimeout(hype._t); hype._t=setTimeout(function(){hypeEl.classList.add("off");},1600);
+}
+window.hype=hype;
+function fromHash(){var h=decodeURIComponent(location.hash||"");var m=h.match(/(?:level|heat)=(\d)/);if(m)setHeat(m[1]);if(/hype/i.test(h))hype();}
+addEventListener("hashchange",fromHash);
+addEventListener("message",function(e){var d=e.data||{};if(d.level!=null)setHeat(d.level);if(d.hype)hype();});
+setHeat(P("level","0")); fromHash();
+if(on("hype","0")) hype();
+if(on("demo","0")&&!HOLD){var n=0;setInterval(function(){n=n===5?0:n+1;setHeat(n);if(n===5)setTimeout(hype,2200);},1800);}
+
+</script>
+</body>
+</html>

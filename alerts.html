@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>REEV CANNON LIVE - Alerts</title>
+<style>
+@font-face{font-family:"Bebas Neue";src:url("fonts/BebasNeue-Regular.ttf") format("truetype");font-weight:400;font-display:block}
+@font-face{font-family:"Poppins";src:url("fonts/Poppins-Medium.ttf") format("truetype");font-weight:500;font-display:block}
+@font-face{font-family:"Poppins";src:url("fonts/Poppins-SemiBold.ttf") format("truetype");font-weight:600;font-display:block}
+@font-face{font-family:"Noto Sans Devanagari";src:url("fonts/NotoSansDevanagari-Variable.ttf") format("truetype");font-weight:100 900;font-display:block}
+:root{--night:#070B12;--panel:#0E1624;--emerald:#16C47E;--glow:#3DFFA8;--gold:#F5C542;--gold-deep:#C4920A;
+  --magenta:#FF2E9A;--orange:#FF7A3D;--purple:#8B3DFF;--cyan:#2EE6FF;--cream:#F6F1E8;--muted:#B7C0CC;--danger:#E11D2E;--saffron:#FF9933}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:transparent;font-synthesis:none;-webkit-font-smoothing:antialiased}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;overflow:hidden;
+  transform-origin:50% 50%;transform:translate(-50%,-50%) scale(var(--s,1))}
+.hi,.dev{font-family:"Noto Sans Devanagari","Poppins",sans-serif}
+body.lang-en .hi,body.lang-hi .en{display:none}
+body.hold *,body.hold *::before,body.hold *::after{animation:none!important;transition:none!important}
+.abs{position:absolute}
+
+#zone{position:absolute;left:360px;top:36px;width:1040px;height:300px;pointer-events:none}
+body.pos-bottom #zone{left:440px;top:770px}
+body.pos-bottom.cam-off #zone{left:440px}
+.card{position:absolute;left:0;top:0;width:1040px;border-radius:16px;background:rgba(14,22,36,.9);
+  box-shadow:0 8px 24px rgba(0,0,0,.55);opacity:0;transform:translateY(-40px) scale(.92)}
+body.pos-bottom .card{transform:translateY(48px) scale(.92)}
+.card.show{animation:cin 300ms cubic-bezier(.2,.8,.2,1) forwards}
+.card.out{animation:cout 420ms ease-in forwards}
+@keyframes cin{to{opacity:1;transform:none}}
+@keyframes cout{from{opacity:1;transform:none}to{opacity:0;transform:translateY(-18px)}}
+.kicker{font-family:"Bebas Neue",sans-serif;font-size:28px;letter-spacing:3px;line-height:1;color:var(--gold)}
+.name{font-family:"Poppins",sans-serif;font-weight:600;font-size:52px;line-height:1.08;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.en{font-family:"Poppins",sans-serif;font-weight:500;font-size:27px;line-height:1.25;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hi{font-weight:600;font-size:25px;line-height:1.4;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* P1 star drop: gifts / stars / super chats */
+.p1{height:200px;border:2px solid var(--gold)}
+.p1 .badge{position:absolute;left:20px;top:20px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#F5C542 0%,#C4920A 75%);
+  box-shadow:0 0 24px #F5C542;display:flex;align-items:center;justify-content:center}
+.p1.show .badge{animation:bin 360ms 80ms cubic-bezier(.2,1.4,.3,1) both}
+@keyframes bin{0%{transform:scale(.6)}70%{transform:scale(1.08)}100%{transform:none}}
+.p1 .badge svg{width:72px;height:72px;fill:#070B12}
+.p1 .copy{position:absolute;left:204px;top:18px;right:200px}
+.p1 .amount{position:absolute;right:36px;top:46px;font-family:"Bebas Neue",sans-serif;font-size:64px;line-height:1;color:var(--gold);text-shadow:0 0 14px rgba(245,197,66,.6)}
+.p1 .ul{position:absolute;left:204px;top:104px;width:80px;height:3px;border-radius:2px;background:linear-gradient(90deg,#F5C542,#16C47E)}
+.p1 .en{position:absolute;left:204px;top:112px;right:36px}
+.p1 .hi{position:absolute;left:204px;top:146px;right:36px}
+.bits{position:absolute;left:100px;top:100px;width:0;height:0}
+.bit{position:absolute;width:7px;height:7px;border-radius:50%;background:#F5C542;opacity:0}
+.show .bit{animation:bit 620ms 120ms ease-out forwards}
+@keyframes bit{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--x),var(--y)) scale(.4)}}
+
+/* P3 vice neon: subs / members / follows */
+.p3{height:200px;border:2px solid var(--cyan)}
+.p3.follow{border-color:var(--magenta)}
+.p3 .bar{position:absolute;left:0;top:0;width:8px;height:100%;border-radius:16px 0 0 16px;background:linear-gradient(#2EE6FF,#FF2E9A);transform-origin:top}
+.p3.show .bar{animation:wipe 260ms ease-out both}
+@keyframes wipe{from{transform:scaleY(0)}to{transform:none}}
+.p3 .icon{position:absolute;left:30px;top:56px;width:88px;height:88px;border-radius:18px;background:var(--cyan);display:flex;align-items:center;justify-content:center;box-shadow:0 0 18px rgba(46,230,255,.6)}
+.p3.follow .icon{background:var(--magenta);box-shadow:0 0 18px rgba(255,46,154,.6)}
+.p3 .icon svg{width:48px;height:48px;fill:#070B12}
+.p3 .copy{position:absolute;left:146px;top:20px;right:32px}
+.p3 .kicker{color:var(--cyan)} .p3.member .kicker,.p3.follow .kicker{color:var(--magenta)}
+.p3 .en{margin-top:8px}.p3 .hi{margin-top:0}
+
+/* P4 first light: first-time chatters */
+.p4{height:160px;border-radius:12px;border:2px solid var(--emerald);background:rgba(14,22,36,.82);top:20px}
+.p4 .cbar{position:absolute;left:0;top:0;width:8px;height:100%;border-radius:12px 0 0 12px}
+.p4 .pd{position:absolute;left:28px;top:30px;width:14px;height:14px;border-radius:50%;background:var(--emerald);box-shadow:0 0 12px var(--emerald);animation:pl 900ms ease-in-out infinite}
+@keyframes pl{0%,100%{opacity:.45}50%{opacity:1}}
+.p4 .copy{position:absolute;left:60px;top:16px;right:28px}
+.p4 .kicker{color:var(--glow);font-size:24px}
+.p4 .name{font-size:40px}.p4 .en{font-size:24px}.p4 .hi{font-size:23px}
+
+/* VIP: Laowow / Luzminda / Soriful - gold crown, bigger, his photo */
+.vip{height:280px;border-radius:22px;border:3px solid var(--gold);background:linear-gradient(100deg,rgba(28,18,4,.94),rgba(14,22,36,.94) 45%,rgba(40,8,40,.92));
+  box-shadow:0 0 34px rgba(245,197,66,.6),0 8px 24px rgba(0,0,0,.55)}
+.vip .face{position:absolute;left:26px;top:40px;width:200px;height:200px;border-radius:50%;background:url("v2-vip-face.png") center/cover;
+  box-shadow:0 0 0 5px var(--gold),0 0 0 8px #160626,0 0 30px rgba(245,197,66,.8)}
+.vip .crown{position:absolute;left:66px;top:-6px;width:120px;height:74px;filter:drop-shadow(0 0 10px rgba(245,197,66,.9))}
+.vip.show .crown{animation:crown 700ms 150ms cubic-bezier(.2,1.5,.3,1) both}
+@keyframes crown{0%{transform:translateY(-50px) rotate(-12deg);opacity:0}100%{transform:none;opacity:1}}
+.vip .ring{position:absolute;left:26px;top:40px;width:200px;height:200px;border-radius:50%;border:3px solid var(--gold);opacity:0}
+.vip.show .ring{animation:ring 800ms 200ms ease-out 3}
+@keyframes ring{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.3);opacity:0}}
+.vip .copy{position:absolute;left:262px;top:22px;right:32px}
+.vip .kicker{font-size:30px;letter-spacing:5px;color:var(--glow)}
+.vip .name{font-family:"Bebas Neue",sans-serif;font-weight:400;font-size:92px;letter-spacing:4px;line-height:1;margin-top:4px;
+  background:linear-gradient(180deg,#FFF1B0 0%,#F5C542 45%,#C4920A 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 3px 0 #160626) drop-shadow(0 0 14px rgba(245,197,66,.55))}
+.vip .en{margin-top:6px;font-size:27px;white-space:normal;max-height:68px;line-height:1.25}
+.vip .hi{font-size:24px}
+.vip .amt{position:absolute;right:30px;top:26px;font-family:"Bebas Neue",sans-serif;font-size:56px;color:var(--gold);text-shadow:0 0 14px rgba(245,197,66,.7)}
+.sweep{position:absolute;inset:0;border-radius:22px;overflow:hidden;pointer-events:none}
+.sweep i{position:absolute;top:0;bottom:0;width:90px;left:-120px;background:linear-gradient(90deg,transparent,rgba(255,241,176,.28),transparent);transform:skewX(-20deg)}
+.vip.show .sweep i{animation:sw 1.6s 600ms ease-in-out infinite}
+@keyframes sw{0%{left:-120px}60%,100%{left:110%}}
+.conf{position:absolute;left:126px;top:140px;width:0;height:0}
+.conf i{position:absolute;width:9px;height:14px;border-radius:2px;opacity:0}
+.vip.show .conf i{animation:cf 1100ms 200ms ease-out forwards}
+@keyframes cf{0%{opacity:1;transform:translate(0,0) rotate(0)}100%{opacity:0;transform:translate(var(--x),var(--y)) rotate(var(--r))}}
+
+</style>
+</head>
+<body>
+<div id="stage">
+<div id="zone"></div>
+</div>
+<script>
+/* Reev Cannon overlay v2 - scales a 1920x1080 stage to any viewport (CameraFi 720p, OBS 1080p). */
+var Q=new URLSearchParams(location.search);
+function P(n,d){var v=Q.get(n);return (v===null||v==="")?d:v;}
+function on(n,d){var v=P(n,d);return v==="1"||v==="true"||v==="yes"||v==="on";}
+(function(){var st=document.getElementById("stage");
+  function fit(){st.style.setProperty("--s",Math.min(innerWidth/1920,innerHeight/1080));}
+  fit();addEventListener("resize",fit);
+  var l=(P("lang","both")+"").toLowerCase(); if(l==="en"||l==="hi")document.body.classList.add("lang-"+l);
+  if(on("hold","0"))document.body.classList.add("hold");
+})();
+
+var SOUND=on("sound","1")&&!on("hold","0"), AC=null;
+function tone(c,f,t,s,d,g){var o=c.createOscillator(),G=c.createGain();o.type=t;o.frequency.setValueAtTime(f,s);G.gain.setValueAtTime(1e-4,s);
+  G.gain.exponentialRampToValueAtTime(g,s+.02);G.gain.exponentialRampToValueAtTime(1e-4,s+d);o.connect(G);G.connect(c.destination);o.start(s);o.stop(s+d+.02);}
+function noise(c,s,d,g,hp){var b=c.createBuffer(1,Math.floor(c.sampleRate*d),c.sampleRate),a=b.getChannelData(0);for(var i=0;i<a.length;i++)a[i]=(Math.random()*2-1)*(1-i/a.length);
+  var n=c.createBufferSource();n.buffer=b;var h=c.createBiquadFilter();h.type="highpass";h.frequency.value=hp;var G=c.createGain();G.gain.setValueAtTime(g,s);
+  G.gain.exponentialRampToValueAtTime(1e-4,s+d);n.connect(h);h.connect(G);G.connect(c.destination);n.start(s);n.stop(s+d);}
+function play(k){if(!SOUND)return;try{var C=window.AudioContext||window.webkitAudioContext;if(!C)return;AC=AC||new C();if(AC.state==="suspended")AC.resume();
+  var c=AC,t=c.currentTime,m=.32;
+  if(k==="p1"){tone(c,1046.5,"sine",t,.08,.22*m);tone(c,261.63,"sine",t+.06,.7,.16*m);tone(c,329.63,"triangle",t+.06,.7,.12*m);noise(c,t+.12,.2,.08*m,200);}
+  else if(k==="p2"){tone(c,261.63,"sine",t,.9,.14*m);tone(c,392,"sine",t,.9,.12*m);tone(c,659.25,"triangle",t+.04,.14,.2*m);tone(c,783.99,"triangle",t+.18,.14,.18*m);noise(c,t+.4,.3,.06*m,4000);}
+  else if(k==="p3"){tone(c,880,"square",t,.09,.08*m);tone(c,220,"sine",t+.02,.12,.1*m);}
+  else if(k==="p4"){tone(c,800,"sine",t,.06,.08*m);}
+  else if(k==="heat-up"){tone(c,120,"sine",t,.08,.16*m);noise(c,t,.08,.1*m,80);}
+  else if(k==="heat-5"){for(var i=0;i<4;i++){tone(c,440,"sine",t+i*.16,.08,.1*m);tone(c,520,"sine",t+.08+i*.16,.08,.1*m);}}
+  else if(k==="hype"){tone(c,60,"sine",t,.25,.28*m);noise(c,t,.35,.16*m,200);}
+}catch(e){}}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function ell(s,n){s=String(s||"");return s.length>n?s.slice(0,n-1)+"…":s;}
+
+/* ---------- REEV CANNON alerts v2 ----------
+ Default (no params): transparent and idle. Nothing shows until an alert is triggered.
+ Trigger formats (type:name:amount[:extra], several joined with |):
+   alerts.html?test=1                         loop through demo alerts
+   alerts.html#gift:Laowow:10                 Stars/gift   (types: gift, stars, superchat, sticker, jewels)
+   alerts.html#sub:Dee   #member:Dee   #giftsub:Dee:5   #follow:Sam   #first:Priya:india
+   alerts.html#vip:soriful:100                force the VIP design
+   alerts.html?alert=follow:Sam|first:Priya:uk
+ Any alert whose name is Laowow, Luzminda or Soriful automatically uses the gold VIP design.
+ Changing the #hash on an open page fires it without reloading. Other pages/tools can also call
+   window.reevAlert({type:"gift",name:"Laowow",amount:"10"})  or  postMessage({type:"follow",name:"Sam"}, "*").
+ Options: &pos=bottom (bottom centre instead of top centre), &sound=0, &hold=1 (freeze on screen, for previews)
+*/
+if(P("pos","top")==="bottom")document.body.classList.add("pos-bottom");
+var HOLD=on("hold","0"), zone=document.getElementById("zone"), queue=[], busy=false;
+var VIP={
+  laowow:{n:"LAOWOW",en:"LAOWOW IN THE BUILDING! Thank you for the love, legend. Always family.",hi:"Laowow आ गए! प्यार के लिए दिल से शुक्रिया, लीजेंड। हमेशा परिवार।"},
+  luzminda:{n:"LUZMINDA",en:"LUZMINDA! Thank you for holding it down. This one is for you.",hi:"Luzminda! साथ निभाने के लिए धन्यवाद। यह आपके लिए है।"},
+  soriful:{n:"SORIFUL",en:"SORIFUL IN THE HOUSE! Thank you for the Stars and the support. Love you, family.",hi:"Soriful आ गए! Stars और सपोर्ट के लिए दिल से धन्यवाद। प्यार, परिवार।"}
+};
+var VIPKICK={gift:"TOP SUPPORTER • STARS",stars:"TOP SUPPORTER • STARS",superchat:"TOP SUPPORTER • SUPER CHAT",sticker:"TOP SUPPORTER • SUPER STICKER",jewels:"TOP SUPPORTER • JEWELS",
+  sub:"TOP SUPPORTER • SUBSCRIBED",member:"TOP SUPPORTER • MEMBER",giftsub:"TOP SUPPORTER • GIFTED SUBS",follow:"TOP SUPPORTER • FOLLOW",first:"TOP SUPPORTER • IN THE CHAT",vip:"FAMILY • परिवार"};
+var STAR='<svg viewBox="0 0 72 72"><polygon points="36,4 42,28 68,36 42,44 36,68 30,44 4,36 30,28"/></svg>';
+var PERSON='<svg viewBox="0 0 40 40"><circle cx="20" cy="14" r="7"/><path d="M8 32c0-6 5.4-10 12-10s12 4 12 10z"/><rect x="30" y="8" width="3" height="12" rx="1"/><rect x="25.5" y="13.5" width="12" height="3" rx="1"/></svg>';
+var HEART='<svg viewBox="0 0 40 40"><path d="M20 35 6 21C1 16 3 7 10.5 6.5c4-.3 7 2.3 9.5 5.5 2.5-3.2 5.5-5.8 9.5-5.5C37 7 39 16 34 21z"/></svg>';
+var CROWN='<svg viewBox="0 0 120 74"><defs><linearGradient id="cg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFEC96"/><stop offset="1" stop-color="#C4920A"/></linearGradient></defs>'+
+  '<path d="M6 70 2 18 34 42 60 4 86 42 118 18 114 70z" fill="url(#cg)" stroke="#160626" stroke-width="4" stroke-linejoin="round"/>'+
+  '<circle cx="60" cy="40" r="7" fill="#16C47E" stroke="#160626" stroke-width="3"/><circle cx="28" cy="56" r="5" fill="#FF2E9A" stroke="#160626" stroke-width="3"/><circle cx="92" cy="56" r="5" fill="#FF2E9A" stroke="#160626" stroke-width="3"/></svg>';
+var COLORS={india:"#FF9933",uk:"#2EE6FF",us:"#16C47E",usa:"#16C47E",canada:"#E11D2E",philippines:"#2EE6FF",bangladesh:"#16C47E",other:"#F5C542",first:"#16C47E"};
+
+function build(a){
+  var type=(a.type||"gift").toLowerCase(), raw=a.name||"Friend", key=String(raw).toLowerCase().replace(/[^a-z]/g,"");
+  var name=esc(ell(raw,22)), amt=esc(a.amount||""), d=document.createElement("div");
+  if(type==="vip"||VIP[key]){
+    var v=VIP[key]||{n:String(raw).toUpperCase(),en:"Welcome back, "+raw+". The family is on the map.",hi:"वापस स्वागत है, "+raw+"। परिवार मैप पर है।"};
+    d.className="card vip";
+    var amtTxt=amt?(amt+(/^(gift|stars)$/.test(type)?" ★":"")):"";
+    d.innerHTML='<div class="sweep"><i></i></div><div class="conf"></div><div class="ring"></div><div class="face"></div><div class="crown">'+CROWN+'</div>'+
+      '<div class="copy"><div class="kicker">'+(VIPKICK[type]||"TOP SUPPORTER")+'</div><div class="name">'+esc(ell(v.n,14))+'</div>'+
+      '<div class="en">'+esc(v.en)+'</div><div class="hi">'+esc(v.hi)+'</div></div>'+(amtTxt?'<div class="amt">'+amtTxt+'</div>':"");
+    var cf=d.querySelector(".conf"), cols=["#F5C542","#FF2E9A","#16C47E","#2EE6FF","#FFF1B0"];
+    for(var i=0;i<26;i++){var c=document.createElement("i"),ang=Math.PI*2*i/26,r=120+Math.random()*120;c.style.background=cols[i%5];
+      c.style.setProperty("--x",Math.cos(ang)*r*1.6+"px");c.style.setProperty("--y",Math.sin(ang)*r+"px");c.style.setProperty("--r",(Math.random()*720-360)+"deg");cf.appendChild(c);}
+    d._sound="p2"; d._ms=8000; return d;
+  }
+  if(/^(gift|stars|superchat|sticker|jewels)$/.test(type)){
+    var k={gift:"STARS",stars:"STARS",superchat:"SUPER CHAT",sticker:"SUPER STICKER",jewels:"JEWELS"}[type];
+    var A=amt||"";
+    var en={stars:name+" just sent "+A+" Stars! Love you for real.",gift:name+" just sent "+A+" Stars! Love you for real.",superchat:name+" just Super Chatted "+A+"! I see you.",
+      sticker:name+" sent a Super Sticker"+(A?" "+A:"")+"!",jewels:name+" sent "+A+" Jewels!"}[type];
+    var hi={stars:name+" ने "+A+" Stars भेजे! दिल से धन्यवाद।",gift:name+" ने "+A+" Stars भेजे! दिल से धन्यवाद।",superchat:name+" ने "+A+" का Super Chat भेजा! मैंने देख लिया।",
+      sticker:name+" ने Super Sticker भेजा!",jewels:name+" ने "+A+" Jewels भेजे!"}[type];
+    if(!A){en=name+" just sent a gift! Love you for real.";hi=name+" ने गिफ्ट भेजा! दिल से धन्यवाद।";}
+    d.className="card p1";
+    d.innerHTML='<div class="badge">'+STAR+'</div><div class="bits"></div><div class="copy"><div class="kicker">'+k+'</div><div class="name">'+name+'</div></div>'+
+      '<div class="ul"></div><div class="amount">'+A+'</div><div class="en">'+en+'</div><div class="hi">'+hi+'</div>';
+    var b=d.querySelector(".bits");
+    for(var j=0;j<16;j++){var e=document.createElement("i");e.className="bit";var an=Math.PI*2*j/16,rr=80+Math.random()*60;
+      e.style.setProperty("--x",Math.cos(an)*rr+"px");e.style.setProperty("--y",Math.sin(an)*rr+"px");b.appendChild(e);}
+    d._sound="p1"; d._ms=6400; return d;
+  }
+  if(/^(sub|member|giftsub|follow)$/.test(type)){
+    var n=amt||"5";
+    var c3={sub:["SUBSCRIBER","sub",name+" just subscribed. Welcome to the crew.",name+" ने सब्सक्राइब किया। क्रू में स्वागत है।",PERSON],
+      member:["MEMBER","member",name+" became a member! Welcome to the inner circle.",name+" मेंबर बन गए! इनर सर्कल में स्वागत है।",PERSON],
+      giftsub:["GIFTED MEMBERSHIPS","member",name+" gifted "+n+" memberships. That is real love.",name+" ने "+n+" मेंबरशिप गिफ्ट कीं। यह असली प्यार है।",PERSON],
+      follow:["NEW FOLLOWER","follow",name+" just followed. Welcome to the family.",name+" ने फॉलो किया। परिवार में स्वागत है।",HEART]}[type];
+    d.className="card p3 "+c3[1];
+    d.innerHTML='<div class="bar"></div><div class="icon">'+c3[4]+'</div><div class="copy"><div class="kicker">'+c3[0]+'</div><div class="name">'+name+'</div>'+
+      '<div class="en">'+c3[2]+'</div><div class="hi">'+c3[3]+'</div></div>';
+    d._sound="p3"; d._ms=5800; return d;
+  }
+  // first-time chatter (default)
+  var country=String(a.extra||a.country||"first").toLowerCase(), other=esc(a.extra||"");
+  var c4={india:["Namaste, "+name+"! Welcome from India. Hindi or English, you're at home.","नमस्ते, "+name+"! भारत से स्वागत है। हिंदी या अंग्रेज़ी, आप अपने घर में हो।"],
+    uk:[name+" checking in from the UK! Glad you're here.",name+" UK से जुड़ गए! स्वागत है।"],
+    us:[name+" from the US, welcome in. Glad you found the stream.",name+" US से हैं, स्वागत है।"],
+    canada:[name+" from Canada, welcome in.",name+" कनाडा से हैं, स्वागत है।"],
+    first:["Welcome in, "+name+"! First time here — say where you're from.","स्वागत है, "+name+"! पहली बार आए हो — बताओ कहाँ से हो।"]}[country]
+    ||[name+" is in the chat from "+other+". Welcome in!",name+" "+other+" से चैट में हैं। स्वागत है!"];
+  d.className="card p4";
+  d.innerHTML='<div class="cbar" style="background:'+(COLORS[country]||COLORS.other)+'"></div><span class="pd"></span><div class="copy"><div class="kicker">FIRST TIME IN CHAT • पहली बार</div>'+
+    '<div class="name">'+name+'</div><div class="en">'+c4[0]+'</div><div class="hi">'+c4[1]+'</div></div>';
+  d._sound="p4"; d._ms=5000; return d;
+}
+function next(){
+  if(busy||!queue.length)return; busy=true;
+  var d=build(queue.shift()); zone.appendChild(d); void d.offsetWidth; d.classList.add("show");
+  if(HOLD){d.style.opacity=1;d.style.transform="none";return;}
+  play(d._sound);
+  setTimeout(function(){d.classList.remove("show");d.classList.add("out");
+    setTimeout(function(){d.remove();busy=false;setTimeout(next,250);},450);},d._ms);
+}
+function reevAlert(a){ if(typeof a==="string")a=parse(a); if(a&&a.length===undefined)a=[a]; (a||[]).forEach(function(x){queue.push(x);}); next(); }
+window.reevAlert=reevAlert;
+function parse(s){
+  s=decodeURIComponent(String(s||"").replace(/^#/,"")).trim(); if(!s)return [];
+  return s.split("|").map(function(p){var f=p.split(":");return {type:f[0],name:f[1],amount:(f[0]==="first"?"":f[2]),extra:(f[0]==="first"?f[2]:f[3])};})
+    .filter(function(x){return x.type;});
+}
+addEventListener("hashchange",function(){reevAlert(parse(location.hash));});
+addEventListener("message",function(e){var m=e.data;if(m&&typeof m==="object"&&m.type)reevAlert(m);else if(typeof m==="string")reevAlert(parse(m));});
+var DEMO=[{type:"gift",name:"Alex",amount:"50"},{type:"follow",name:"Sam"},{type:"first",name:"Priya",extra:"india"},{type:"sub",name:"Dee"},
+  {type:"gift",name:"Laowow",amount:"100"},{type:"giftsub",name:"Marcus",amount:"5"},{type:"stars",name:"Luzminda",amount:"250"},{type:"first",name:"Jay",extra:"uk"},{type:"vip",name:"Soriful"}];
+if(P("alert",""))reevAlert(parse(P("alert","")));
+if(location.hash.length>1)reevAlert(parse(location.hash));
+if(on("test","0")||on("demo","0")){
+  var di=+P("start","0")||0;
+  (function loop(){ if(!busy&&!queue.length){queue.push(DEMO[di++%DEMO.length]);next();} setTimeout(loop,600);})();
+}
+
+</script>
+</body>
+</html>
